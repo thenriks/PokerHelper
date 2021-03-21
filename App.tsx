@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, TouchableHighlight } from 'react-native';
 import * as pdata from './push.json';
 import * as cdata from './call.json';
 import { Convert } from './Convert'
@@ -139,116 +139,145 @@ function PFScreen ({ navigation }) {
 	}, [currentHand, isSuited]);
 
   	return (
-	    <View style={styles.container}>
-	    	<Text>
+	    <View style={styles.pfContainer}>
+	    	<Text style={{ fontSize: 32 }}>
 	    		{currentHand}
 	    		{isSuited ? 's' : 'o'}
 	    	</Text>
-	    	<Text>
+	    	<Text style={{ fontSize: 28 }}>
 	    		Push: {pushStack}
 	    	</Text>
-	    	<Text>
+	    	<Text style={{ fontSize: 28 }}>
 	    		Call: {callStack}
 	    	</Text>
 	    	<View style={styles.row}>
-		    	<Button
-		    		title="2"
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(2)
-          			}
-		    	/>
-		    	<Button
-		    		title="3"
+          			}>
+		    		<Text>2</Text>
+		    	</TouchableHighlight>
+
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(3)
-          			}
-		    	/>
-		    	<Button
-		    		title="4"
+          			}>
+		    		<Text>3</Text>
+		    	</TouchableHighlight>
+
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(4)
-          			}
-		    	/>
+          			}>
+		    		<Text>4</Text>
+		    	</TouchableHighlight>
 	    	</View>
+
 	    	<View style={styles.row}>
-		    	<Button
-		    		title="5"
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(5)
-          			}
-		    	/>
-		    	<Button
-		    		title="6"
+          			}>
+		    		<Text>5</Text>
+		    	</TouchableHighlight>
+
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(6)
-          			}
-		    	/>
-		    	<Button
-		    		title="7"
+          			}>
+		    		<Text>6</Text>
+		    	</TouchableHighlight>
+
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(7)
-          			}
-		    	/>
+          			}>
+		    		<Text>7</Text>
+		    	</TouchableHighlight>
 	    	</View>
+
 	    	<View style={styles.row}>
-		    	<Button
-		    		title="8"
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(8)
-          			}
-		    	/>
-		    	<Button
-		    		title="9"
+          			}>
+		    		<Text>8</Text>
+		    	</TouchableHighlight>
+
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(9)
-          			}
-		    	/>
-		    	<Button
-		    		title="T"
+          			}>
+		    		<Text>9</Text>
+		    	</TouchableHighlight>
+
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(10)
-          			}
-		    	/>
+          			}>
+		    		<Text>T</Text>
+		    	</TouchableHighlight>
 	    	</View>
+
 	    	<View style={styles.row}>
-		    	<Button
-		    		title="J"
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(11)
-          			}
-		    	/>
-		    	<Button
-		    		title="Q"
+          			}>
+		    		<Text>J</Text>
+		    	</TouchableHighlight>
+
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(12)
-          			}
-		    	/>
-		    	<Button
-		    		title="K"
+          			}>
+		    		<Text>Q</Text>
+		    	</TouchableHighlight>
+
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(13)
-          			}
-		    	/>
+          			}>
+		    		<Text>K</Text>
+		    	</TouchableHighlight>
 	    	</View>
+
 	    	<View style={styles.row}>
-	    		<Button
-		    		title={isSuited ? 's' : 'o'}
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			setIsSuited(!isSuited)
-          			}
-		    	/>
-		    	<Button
-		    		title="A"
+          			}>
+		    		<Text>{isSuited ? 's' : 'o'}</Text>
+		    	</TouchableHighlight>
+
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(14)
-          			}
-		    	/>
-		    	<Button
-		    		title="C"
+          			}>
+		    		<Text>A</Text>
+		    	</TouchableHighlight>
+
+		    	<TouchableHighlight 
+		    		style={styles.pfButton}
 		    		onPress={() =>
             			selectCard(15)
-          			}
-		    	/>
+          			}>
+		    		<Text>C</Text>
+		    	</TouchableHighlight>
 	    	</View>
 		</View>
   	);
@@ -300,17 +329,38 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
+    flexWrap: "wrap",
     backgroundColor: '#ddd',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  inputField: {
-    width: '33%',
-    backgroundColor: '#fff',
-    borderBottomColor: 'black',
+  pfContainer: {
+    flex: 1,
+    flexGrow: 1,
+    width: "100%",
+    flexDirection: "column",
+    flexWrap: "wrap",
+    backgroundColor: '#ddd',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  pfButton: {
+    flex: 1,
+    flexGrow: 1,
+    padding: "2px",
+    backgroundColor: '#bbb',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: "#ccc",
+    justifyContent: 'space-around',
   },
   row: {
+  	width: "80%",
     flexDirection: "row",
-    flexWrap: "wrap",
+    flexGrow: 1,
+    //flexWrap: "wrap",
+    alignItems: 'stretch',
+    justifyContent: 'space-around',
   },
 });
