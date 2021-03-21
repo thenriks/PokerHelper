@@ -119,6 +119,12 @@ function PFScreen ({ navigation }) {
 
 	// Called when user selects a card. 15 = clear
   	function selectCard(card: number) {
+  		if (card == 15) {
+  			setCurrentHand('--');
+  			setHandChosen(true);
+  			return;
+  		}
+
   		if (handChosen == true) {
   			setHandChosen(false);
   			setCurrentHand(cardToString(card));
@@ -130,7 +136,7 @@ function PFScreen ({ navigation }) {
 
   	useEffect(() => {
    		getRanges();
-	}, [currentHand]);
+	}, [currentHand, isSuited]);
 
   	return (
 	    <View style={styles.container}>
@@ -225,6 +231,12 @@ function PFScreen ({ navigation }) {
 		    	/>
 	    	</View>
 	    	<View style={styles.row}>
+	    		<Button
+		    		title={isSuited ? 's' : 'o'}
+		    		onPress={() =>
+            			setIsSuited(!isSuited)
+          			}
+		    	/>
 		    	<Button
 		    		title="A"
 		    		onPress={() =>
