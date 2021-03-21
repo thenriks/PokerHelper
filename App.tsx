@@ -6,6 +6,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import * as pdata from './push.json';
 import * as cdata from './call.json';
+import { Convert } from './Convert'
+
 
 
 function StartScreen ({ navigation }) {
@@ -30,19 +32,23 @@ function StartScreen ({ navigation }) {
 
 function PFScreen ({ navigation }) {
 	const [currentHand, setCurrentHand] = useState('--');
-	//const [card1, setCard1] = useState(0);
-	//const [card2, setCard2] = useState(0);
-	var card1 = 0;
-	var card2 = 0;
 	const [handChosen, setHandChosen] = useState(true);
 	const [stack, setStack] = useState('- BB');
-	//var korti1 = 0;
+	const [isSuited, setIsSuited] = useState(false);
+	const pushHands = Convert.toHands(JSON.stringify(pdata));
+	const callHands = Convert.toHands(JSON.stringify(cdata));
+
 
 	React.useEffect(() => {
     	const unsubscribe = navigation.addListener('focus', () => {
-      	// console.log("Nonniih");
-      	console.log(pdata['AA'][0][1]);
+      	console.log("Enter PFScreen");
+      	//console.log(pdata['AA'][0][1]);
     	});
+
+    	/*var ch = '42o';
+		console.log(pushHands['default'][ch][0][1] + " BB");
+		ch = 'KQs';
+		console.log(pushHands['default'][ch][0][1] + " BB");*/
 
     	return unsubscribe;
   	}, [navigation]);
@@ -79,30 +85,50 @@ function PFScreen ({ navigation }) {
   		}
   	}
 
-  	function getRanges(hand: string) {
+  	function getRanges() {
+  		if (currentHand.length < 2) {
+  			return;
+  		}
 
+  		var card1 = currentHand.charAt(0);
+  		var card2 = currentHand.charAt(1);
+
+  		if (cardToNumber(card2) > cardToNumber(card1)) {
+  			setCurrentHand(card2 + card1);
+  		}
+
+  		if (currentHand.length == 2 && currentHand != '--') {
+  			try {
+  				var ch = currentHand;
+  				if (card1 != card2) {
+	  				if(isSuited) {
+	  					ch += 's';
+	  				} else {
+	  					ch += 'o';
+	  				}
+  				}
+  				// const ch = currentHand+'o';
+  				setStack(pushHands['default'][ch][0][1] + " BB");
+ 			} catch(error) {
+  				console.log(error);
+  			}
+  		}
   	}
 
 	// Called when user selects a card. 15 = clear
   	function selectCard(card: number) {
-  		//console.log(card);
-
-  		//console.log(korti1)
-  		//  	console.log("c1: " + card1);
-  		//	console.log("c2: " + card2);
-  		//	console.log("ch: " + handChosen);
-
   		if (handChosen == true) {
   			setHandChosen(false);
   			setCurrentHand(cardToString(card));
   		} else {
-  			//setCard2(card);
-  			//card2 = card;
   			setHandChosen(true);
-  			//setCurrentHand(cardToString(card1).concat(cardToString(card2)));
   			setCurrentHand(currentHand.concat(cardToString(card)));
   		}
   	}
+
+  	useEffect(() => {
+   		getRanges();
+	}, [currentHand]);
 
   	return (
 	    <View style={styles.container}>
