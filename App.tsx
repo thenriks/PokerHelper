@@ -33,7 +33,8 @@ function StartScreen ({ navigation }) {
 function PFScreen ({ navigation }) {
 	const [currentHand, setCurrentHand] = useState('--');
 	const [handChosen, setHandChosen] = useState(true);
-	const [stack, setStack] = useState('- BB');
+	const [pushStack, setPushStack] = useState('- BB');
+	const [callStack, setCallStack] = useState('- BB');
 	const [isSuited, setIsSuited] = useState(false);
 	const pushHands = Convert.toHands(JSON.stringify(pdata));
 	const callHands = Convert.toHands(JSON.stringify(cdata));
@@ -108,7 +109,8 @@ function PFScreen ({ navigation }) {
 	  				}
   				}
   				// const ch = currentHand+'o';
-  				setStack(pushHands['default'][ch][0][1] + " BB");
+  				setPushStack(pushHands['default'][ch][0][1] + " BB");
+  				setCallStack(callHands['default'][ch][0][1] + " BB");
  			} catch(error) {
   				console.log(error);
   			}
@@ -134,9 +136,13 @@ function PFScreen ({ navigation }) {
 	    <View style={styles.container}>
 	    	<Text>
 	    		{currentHand}
+	    		{isSuited ? 's' : 'o'}
 	    	</Text>
 	    	<Text>
-	    		{stack}
+	    		Push: {pushStack}
+	    	</Text>
+	    	<Text>
+	    		Call: {callStack}
 	    	</Text>
 	    	<View style={styles.row}>
 		    	<Button
