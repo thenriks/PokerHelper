@@ -87,7 +87,7 @@ function PFScreen ({ navigation }) {
   	}
 
   	function getRanges() {
-  		if (currentHand.length < 2) {
+  		if (currentHand.length < 2 || currentHand == '--' || handChosen == false) {
   			return;
   		}
 
@@ -156,7 +156,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(2)
           			}>
-		    		<Text>2</Text>
+		    		<Text style={styles.pfButtonText}>2</Text>
 		    	</TouchableHighlight>
 
 		    	<TouchableHighlight 
@@ -164,7 +164,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(3)
           			}>
-		    		<Text>3</Text>
+		    		<Text style={styles.pfButtonText}>3</Text>
 		    	</TouchableHighlight>
 
 		    	<TouchableHighlight 
@@ -172,7 +172,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(4)
           			}>
-		    		<Text>4</Text>
+		    		<Text style={styles.pfButtonText}>4</Text>
 		    	</TouchableHighlight>
 	    	</View>
 
@@ -182,7 +182,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(5)
           			}>
-		    		<Text>5</Text>
+		    		<Text style={styles.pfButtonText}>5</Text>
 		    	</TouchableHighlight>
 
 		    	<TouchableHighlight 
@@ -190,7 +190,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(6)
           			}>
-		    		<Text>6</Text>
+		    		<Text style={styles.pfButtonText}>6</Text>
 		    	</TouchableHighlight>
 
 		    	<TouchableHighlight 
@@ -198,7 +198,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(7)
           			}>
-		    		<Text>7</Text>
+		    		<Text style={styles.pfButtonText}>7</Text>
 		    	</TouchableHighlight>
 	    	</View>
 
@@ -208,7 +208,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(8)
           			}>
-		    		<Text>8</Text>
+		    		<Text style={styles.pfButtonText}>8</Text>
 		    	</TouchableHighlight>
 
 		    	<TouchableHighlight 
@@ -216,7 +216,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(9)
           			}>
-		    		<Text>9</Text>
+		    		<Text style={styles.pfButtonText}>9</Text>
 		    	</TouchableHighlight>
 
 		    	<TouchableHighlight 
@@ -224,7 +224,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(10)
           			}>
-		    		<Text>T</Text>
+		    		<Text style={styles.pfButtonText}>T</Text>
 		    	</TouchableHighlight>
 	    	</View>
 
@@ -234,7 +234,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(11)
           			}>
-		    		<Text>J</Text>
+		    		<Text style={styles.pfButtonText}>J</Text>
 		    	</TouchableHighlight>
 
 		    	<TouchableHighlight 
@@ -242,7 +242,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(12)
           			}>
-		    		<Text>Q</Text>
+		    		<Text style={styles.pfButtonText}>Q</Text>
 		    	</TouchableHighlight>
 
 		    	<TouchableHighlight 
@@ -250,7 +250,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(13)
           			}>
-		    		<Text>K</Text>
+		    		<Text style={styles.pfButtonText}>K</Text>
 		    	</TouchableHighlight>
 	    	</View>
 
@@ -260,7 +260,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			setIsSuited(!isSuited)
           			}>
-		    		<Text>{isSuited ? 's' : 'o'}</Text>
+		    		<Text style={styles.pfButtonText}>{isSuited ? 's' : 'o'}</Text>
 		    	</TouchableHighlight>
 
 		    	<TouchableHighlight 
@@ -268,7 +268,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(14)
           			}>
-		    		<Text>A</Text>
+		    		<Text style={styles.pfButtonText}>A</Text>
 		    	</TouchableHighlight>
 
 		    	<TouchableHighlight 
@@ -276,7 +276,7 @@ function PFScreen ({ navigation }) {
 		    		onPress={() =>
             			selectCard(15)
           			}>
-		    		<Text>C</Text>
+		    		<Text style={styles.pfButtonText}>C</Text>
 		    	</TouchableHighlight>
 	    	</View>
 		</View>
@@ -291,7 +291,7 @@ function QuizScreen ({ navigation }) {
 
   	return (
     	<View style={styles.container}>
-        	<Text>Quiz</Text>
+        	<Text>Quiz coming...</Text>
         	<Text>{spade}</Text>
 	    	<Text>{heart}</Text>
 	    	<Text>{diamond}</Text>
@@ -332,8 +332,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flexWrap: "wrap",
     backgroundColor: '#ddd',
-    alignItems: 'center',
-    justifyContent: 'center',
+    //alignItems: 'center',
+    //justifyContent: 'center',
   },
   pfContainer: {
     flex: 1,
@@ -348,12 +348,14 @@ const styles = StyleSheet.create({
   pfButton: {
     flex: 1,
     flexGrow: 1,
-    padding: "2px",
     backgroundColor: '#bbb',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: "#ccc",
     justifyContent: 'space-around',
+  },
+  pfButtonText: {
+  	fontSize: 30,
   },
   row: {
   	width: "80%",
