@@ -151,6 +151,14 @@ function PFScreen ({ navigation }) {
 	    		Call: {callStack}
 	    	</Text>
 	    	<View style={styles.row}>
+	    		<TouchableHighlight 
+		    		style={styles.pfButton}
+		    		onPress={() =>
+            			selectCard(14)
+          			}>
+		    		<Text style={styles.pfButtonText}>A</Text>
+		    	</TouchableHighlight>
+
 		    	<TouchableHighlight 
 		    		style={styles.pfButton}
 		    		onPress={() =>
@@ -166,7 +174,10 @@ function PFScreen ({ navigation }) {
           			}>
 		    		<Text style={styles.pfButtonText}>3</Text>
 		    	</TouchableHighlight>
+	    	</View>
 
+
+	    	<View style={styles.row}>
 		    	<TouchableHighlight 
 		    		style={styles.pfButton}
 		    		onPress={() =>
@@ -174,9 +185,7 @@ function PFScreen ({ navigation }) {
           			}>
 		    		<Text style={styles.pfButtonText}>4</Text>
 		    	</TouchableHighlight>
-	    	</View>
 
-	    	<View style={styles.row}>
 		    	<TouchableHighlight 
 		    		style={styles.pfButton}
 		    		onPress={() =>
@@ -193,6 +202,9 @@ function PFScreen ({ navigation }) {
 		    		<Text style={styles.pfButtonText}>6</Text>
 		    	</TouchableHighlight>
 
+	    	</View>
+
+	    	<View style={styles.row}>
 		    	<TouchableHighlight 
 		    		style={styles.pfButton}
 		    		onPress={() =>
@@ -200,9 +212,7 @@ function PFScreen ({ navigation }) {
           			}>
 		    		<Text style={styles.pfButtonText}>7</Text>
 		    	</TouchableHighlight>
-	    	</View>
 
-	    	<View style={styles.row}>
 		    	<TouchableHighlight 
 		    		style={styles.pfButton}
 		    		onPress={() =>
@@ -219,6 +229,9 @@ function PFScreen ({ navigation }) {
 		    		<Text style={styles.pfButtonText}>9</Text>
 		    	</TouchableHighlight>
 
+	    	</View>
+
+	    	<View style={styles.row}>
 		    	<TouchableHighlight 
 		    		style={styles.pfButton}
 		    		onPress={() =>
@@ -226,9 +239,7 @@ function PFScreen ({ navigation }) {
           			}>
 		    		<Text style={styles.pfButtonText}>T</Text>
 		    	</TouchableHighlight>
-	    	</View>
 
-	    	<View style={styles.row}>
 		    	<TouchableHighlight 
 		    		style={styles.pfButton}
 		    		onPress={() =>
@@ -245,13 +256,6 @@ function PFScreen ({ navigation }) {
 		    		<Text style={styles.pfButtonText}>Q</Text>
 		    	</TouchableHighlight>
 
-		    	<TouchableHighlight 
-		    		style={styles.pfButton}
-		    		onPress={() =>
-            			selectCard(13)
-          			}>
-		    		<Text style={styles.pfButtonText}>K</Text>
-		    	</TouchableHighlight>
 	    	</View>
 
 	    	<View style={styles.row}>
@@ -266,9 +270,9 @@ function PFScreen ({ navigation }) {
 		    	<TouchableHighlight 
 		    		style={styles.pfButton}
 		    		onPress={() =>
-            			selectCard(14)
+            			selectCard(13)
           			}>
-		    		<Text style={styles.pfButtonText}>A</Text>
+		    		<Text style={styles.pfButtonText}>K</Text>
 		    	</TouchableHighlight>
 
 		    	<TouchableHighlight 
@@ -288,15 +292,70 @@ function QuizScreen ({ navigation }) {
 	var heart = '\u{2665}';
 	var diamond = '\u{2666}';
 	var club = '\u{2663}';
+	var suits:string[] = [spade, heart, diamond, club];
+
+	const [effStack, setEffStack] = useState(0);
+	const [hand, setHand] = useState("--");
+
+	var isPusher = true;
+
+	React.useEffect(() => {
+    	const unsubscribe = navigation.addListener('focus', () => {
+    		newHand();
+      		console.log("Enter QuizScreen");
+    	});
+
+    	return unsubscribe;
+  	}, [navigation]);
+
+  	function cardToString(card: number): string {
+  		if (card == 10) {
+  			return 'T';
+  		} else if (card == 11) {
+  			return 'J';
+  		} else if (card == 12) {
+  			return 'Q';
+  		} else if (card == 13) {
+  			return 'K';
+  		} else if (card == 14) {
+  			return 'A';
+  		} else {
+  			return card.toString();
+  		}
+  	}
+
+	function newHand() {
+		var c1 = Math.floor(Math.random() * 13) + 2;
+		var s1 = Math.floor(Math.random() * 4) + 1;
+		var c2 = Math.floor(Math.random() * 13) + 2;
+		var s2 = Math.floor(Math.random() * 4);
+		var newStack = Math.floor(Math.random() * 14) + 1;
+		newStack += Math.floor(Math.random() * 10)/10;
+
+		var nHand = cardToString(c1) + suits[s1] + " " + cardToString(c2) + suits[s2];
+
+		setHand(nHand);
+		setEffStack(newStack);
+	}
 
   	return (
     	<View style={styles.container}>
-        	<Text>Quiz coming...</Text>
-        	<Text>{spade}</Text>
-	    	<Text>{heart}</Text>
-	    	<Text>{diamond}</Text>
-	    	<Text>{club}</Text>
-    	</View>
+        	<Text>Effective stack: {effStack} BB</Text>
+        	<Text>{hand}</Text>
+
+        	<Button 
+		    		title={ isPusher ? "Push" : "Call" }
+		    		onPress={() =>
+            			newHand()
+          			}
+          	/>
+          	<Button 
+		    		title="Fold"
+		    		onPress={() =>
+            			newHand()
+          			}
+          	/>
+        </View>
   	);
 };
 
