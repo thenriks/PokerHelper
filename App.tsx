@@ -3,11 +3,12 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Text, View, TextInput, Button, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, TouchableHighlight, Alert } from 'react-native';
 import * as pdata from './push.json';
 import * as cdata from './call.json';
-import { Convert } from './Convert'
-
+import { Convert } from './Convert';
+import { Utils } from './Utils';
+//{cardToString, cardToNumber} from
 
 
 function StartScreen ({ navigation }) {
@@ -54,38 +55,6 @@ function PFScreen ({ navigation }) {
     	return unsubscribe;
   	}, [navigation]);
 
-  	function cardToString(card: number): string {
-  		if (card == 10) {
-  			return 'T';
-  		} else if (card == 11) {
-  			return 'J';
-  		} else if (card == 12) {
-  			return 'Q';
-  		} else if (card == 13) {
-  			return 'K';
-  		} else if (card == 14) {
-  			return 'A';
-  		} else {
-  			return card.toString();
-  		}
-  	}
-
-  	function cardToNumber(card: string): number {
-  		if (card == 'T') {
-  			return 10;
-  		} else if (card == 'J') {
-  			return 11;
-  		} else if (card == 'Q') {
-  			return 12;
-  		} else if (card == 'K') {
-  			return 13;
-  		} else if (card == 'A') {
-  			return 14;
-  		} else {
-  			return Number(card);
-  		}
-  	}
-
   	function getRanges() {
   		if (currentHand.length < 2 || currentHand == '--' || handChosen == false) {
   			return;
@@ -94,7 +63,7 @@ function PFScreen ({ navigation }) {
   		var card1 = currentHand.charAt(0);
   		var card2 = currentHand.charAt(1);
 
-  		if (cardToNumber(card2) > cardToNumber(card1)) {
+  		if (Utils.cardToNumber(card2) > Utils.cardToNumber(card1)) {
   			setCurrentHand(card2 + card1);
   		}
 
@@ -108,7 +77,6 @@ function PFScreen ({ navigation }) {
 	  					ch += 'o';
 	  				}
   				}
-  				// const ch = currentHand+'o';
   				setPushStack(pushHands['default'][ch][0][1] + " BB");
   				setCallStack(callHands['default'][ch][0][1] + " BB");
  			} catch(error) {
@@ -127,10 +95,14 @@ function PFScreen ({ navigation }) {
 
   		if (handChosen == true) {
   			setHandChosen(false);
-  			setCurrentHand(cardToString(card));
+  			setCurrentHand(Utils.cardToString(card));
   		} else {
   			setHandChosen(true);
-  			setCurrentHand(currentHand.concat(cardToString(card)));
+        if (card < Utils.cardToNumber(currentHand.charAt(0))) {
+    			setCurrentHand(currentHand.concat(Utils.cardToString(card)));
+        } else {
+          setCurrentHand(Utils.cardToString(card).concat(currentHand));
+        }
   		}
   	}
 
@@ -296,63 +268,128 @@ function QuizScreen ({ navigation }) {
 
 	const [effStack, setEffStack] = useState(0);
 	const [hand, setHand] = useState("--");
+	const [maxStack, setMaxStack] = useState(0);
+  const [bbLimit, setBbLimit] = useState(0);
+	const [isPusher, setIsPusher] = useState(true);
 
-	var isPusher = true;
+	const pushHands = Convert.toHands(JSON.stringify(pdata));
+	const callHands = Convert.toHands(JSON.stringify(cdata));
+
 
 	React.useEffect(() => {
     	const unsubscribe = navigation.addListener('focus', () => {
     		newHand();
-      		console.log("Enter QuizScreen");
+      	console.log("Enter QuizScreen");
     	});
-
+      newHand();
     	return unsubscribe;
   	}, [navigation]);
 
-  	function cardToString(card: number): string {
-  		if (card == 10) {
-  			return 'T';
-  		} else if (card == 11) {
-  			return 'J';
-  		} else if (card == 12) {
-  			return 'Q';
-  		} else if (card == 13) {
-  			return 'K';
-  		} else if (card == 14) {
-  			return 'A';
-  		} else {
-  			return card.toString();
-  		}
-  	}
-
 	function newHand() {
 		var c1 = Math.floor(Math.random() * 13) + 2;
-		var s1 = Math.floor(Math.random() * 4) + 1;
+		var s1 = Math.floor(Math.random() * 4);
 		var c2 = Math.floor(Math.random() * 13) + 2;
 		var s2 = Math.floor(Math.random() * 4);
 		var newStack = Math.floor(Math.random() * 14) + 1;
 		newStack += Math.floor(Math.random() * 10)/10;
+    
+    var ip = Math.random();
+    if (ip < 0.5) {
+      setIsPusher(false);
+    } else {
+      setIsPusher(true);
+    }
 
-		var nHand = cardToString(c1) + suits[s1] + " " + cardToString(c2) + suits[s2];
+		if (c1 == c2 && s1 == s2) {
+			if (c2 > 2) {
+				c2--;
+			}else {
+				c2++;
+			}
+		}
+
+		var nHand = Utils.cardToString(c1) + suits[s1] + " " + Utils.cardToString(c2) + suits[s2];
 
 		setHand(nHand);
 		setEffStack(newStack);
 	}
 
+  /*const showResults = () =>
+    Alert.alert(
+      "Alert Title",
+      "My Alert Msg",
+      [
+        { text: "OK", onPress: () => console.log("Close alert") }
+      ]
+    );*/
+
+	// action = push for push/call
+	function checkResults(action: string) {
+    var limit = 0;
+
+    var c1 = hand.charAt(0);
+    var s1 = hand.charAt(1);
+    var c2 = hand.charAt(3);
+    var s2 = hand.charAt(4);
+    var handStr = "";
+
+    if (Utils.cardToNumber(c1) < Utils.cardToNumber(c2)) {
+      handStr = c2 + c1;
+    }else {
+      handStr = c1 + c2;
+    }
+
+    if (c1 != c2 && s1 == s2) {
+      handStr += "s";
+    } else if (c1 != c2 && s1 != s2) {
+      handStr += "o";
+    }
+
+    console.log("checkR: " + handStr);
+
+    if (isPusher) {
+      limit = pushHands['default'][handStr][0][1];
+    } else {
+      limit = callHands['default'][handStr][0][1];
+    }
+    console.log("lim: " + limit);
+
+    if (isPusher) {
+      if (action == "push" && effStack < limit) {
+        alert("Correct, limit for pushing with " + hand + " is " + limit + " BB");
+      } else if (action == "fold" && effStack > limit){
+        alert("Correct, limit for pushing with " + hand + " is " + limit + " BB");
+      } else {
+        alert("Incorrect, limit for pushing with " + hand + " is " + limit + " BB");
+      }
+    } else {
+      if (action == "push" && effStack < limit) {
+        alert("Correct, limit for calling with " + hand + " is " + limit + " BB");
+      } else if (action == "fold" && effStack > limit){
+        alert("Correct, limit for calling with " + hand + " is " + limit + " BB");
+      } else {
+        alert("Incorrect, limit for calling with " + hand + " is " + limit + " BB");
+      }
+    }
+
+    newHand();
+	}
+
   	return (
     	<View style={styles.container}>
-        	<Text>Effective stack: {effStack} BB</Text>
-        	<Text>{hand}</Text>
+        	<Text style={{ fontSize: 28 }}>Effective stack: {effStack} BB</Text>
+        	<Text style={{ fontSize: 32 }}>{hand}</Text>
 
         	<Button 
 		    		title={ isPusher ? "Push" : "Call" }
 		    		onPress={() =>
-            			newHand()
+            			checkResults("push")
           			}
           	/>
           	<Button 
 		    		title="Fold"
 		    		onPress={() =>
-            			newHand()
+            			checkResults("fold")
           			}
           	/>
         </View>
